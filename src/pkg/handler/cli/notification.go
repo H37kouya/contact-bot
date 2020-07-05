@@ -1,10 +1,8 @@
 package cli
 
-import (
-	"fmt"
-)
+import "contact-bot/pkg/usecase"
 
 // NotificationHandler 通知処理
 func NotificationHandler() {
-	fmt.Println("Hello")
+	usecase.NotificationUsecase()
 }

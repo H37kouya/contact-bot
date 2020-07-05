@@ -1,8 +1,6 @@
 package main
 
-import (
-	"go-api-practice/pkg/handler/cli"
-)
+import "contact-bot/pkg/handler/cli"
 
 func main() {
 	cli.NotificationHandler()

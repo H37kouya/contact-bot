@@ -9,4 +9,7 @@ $docker-compose up -d
 
 # 実行
 $docker-compose run cli go run ./cmd/main.go
+
+# テスト
+docker-compose run cli go test -v -cover ./...
 ```
