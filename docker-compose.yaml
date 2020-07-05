@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  cli:
+    build:
+      context: .
+      dockerfile: ./src/Dockerfile
+    tty: true
+    volumes:
+      - ./src:/contact_bot_src
