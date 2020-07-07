@@ -4,21 +4,21 @@ import (
 	"os"
 )
 
-// SpreedSheetConfig SpreedSheetの設定
-type SpreedSheetConfig struct {
+// SpreadSheetConfig SpreedSheetの設定
+type SpreadSheetConfig struct {
 	ID string
 }
 
 // Config Configの設定
 type Config struct {
-	SpreedSheet SpreedSheetConfig
+	SpreadSheet SpreadSheetConfig
 }
 
 // NewConfig return configuration struct.
 func NewConfig() (Config, error) {
 	var config Config
 
-	config.SpreedSheet.ID = os.Getenv("SPREED_SHEET_ID")
+	config.SpreadSheet.ID = os.Getenv("SPREAD_SHEET_ID")
 
 	return config, nil
 }

@@ -15,6 +15,6 @@ func TestNewConfig(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		assert.NotNil(t, config.SpreedSheet.ID)
+		assert.NotNil(t, config.SpreadSheet.ID)
 	})
 }
