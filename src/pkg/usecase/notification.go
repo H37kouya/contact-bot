@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"contact-bot/pkg/domain/service"
-	"contact-bot/pkg/infra/slack"
 	"fmt"
 )
 
@@ -12,13 +11,15 @@ type NotificationUsecase interface {
 }
 
 type notificationUsecase struct {
-	contactService service.ContactService
+	contactService      service.ContactService
+	notificationService service.NotificationService
 }
 
 // NewNotificationUsecase NotificationUsecase DIするために必要
-func NewNotificationUsecase(cs service.ContactService) NotificationUsecase {
+func NewNotificationUsecase(cs service.ContactService, ns service.NotificationService) NotificationUsecase {
 	return &notificationUsecase{
-		contactService: cs,
+		contactService:      cs,
+		notificationService: ns,
 	}
 }
 
@@ -30,5 +31,8 @@ func (nu notificationUsecase) SlackNotification() {
 	}
 
 	fmt.Println(contacts)
-	slack.TestNotification()
+	err = nu.notificationService.ContactNotification(contacts)
+	if err != nil {
+		fmt.Println(err)
+	}
 }

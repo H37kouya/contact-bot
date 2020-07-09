@@ -8,5 +8,6 @@ import (
 func InjectNotificationUsecase() usecase.NotificationUsecase {
 	return usecase.NewNotificationUsecase(
 		InjectContactService(),
+		InjectNotificationService(),
 	)
 }

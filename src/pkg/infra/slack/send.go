@@ -1,7 +1,7 @@
 package slack
 
 import (
-	"fmt"
+	"contact-bot/pkg/domain/notification"
 	"os"
 
 	"github.com/ashwanthkumar/slack-go-webhook"
@@ -12,8 +12,16 @@ const (
 	USERNAME = "GoBot"
 )
 
+// NewSendSlack SendSlack
+func NewSendSlack() notification.SlackNotificaion {
+	return &sendSlack{}
+}
+
+// slackSend slackSend データの構造体
+type sendSlack struct{}
+
 // TestNotification Test通知用
-func TestNotification() {
+func (ss sendSlack) TestNotification() error {
 	field1 := slack.Field{Title: "Message", Value: "Hello World!!!!"}
 	field2 := slack.Field{Title: "AnythingKey", Value: "AnythingValue"}
 
@@ -27,7 +35,9 @@ func TestNotification() {
 		Attachments: []slack.Attachment{attachment},
 	}
 	err := slack.Send(os.Getenv("SLACK_WEBHOOK_URL"), "", payload)
-	if err != nil {
-		fmt.Println(err)
+
+	if len(err) == 0 {
+		return nil
 	}
+	return err[0]
 }

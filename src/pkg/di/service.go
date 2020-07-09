@@ -8,3 +8,10 @@ func InjectContactService() service.ContactService {
 		InjectContactSheetPersistence(),
 	)
 }
+
+// InjectNotificationService InjectNotificationServiceの依存性注入
+func InjectNotificationService() service.NotificationService {
+	return service.NewNotificationService(
+		InjectSendSlack(),
+	)
+}
