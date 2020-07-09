@@ -22,7 +22,7 @@ func NewContactSheetPersistence() repository.ContactRepository {
 	return &contactSheetPersistence{}
 }
 
-// contactSheetPersistence Image データの構造体
+// contactSheetPersistence contactSheetPersistence データの構造体
 type contactSheetPersistence struct{}
 
 // GetContactSheetPersistence ContactSheetを取得する

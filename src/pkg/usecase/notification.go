@@ -22,7 +22,11 @@ func NewNotificationUsecase(cs service.ContactService) NotificationUsecase {
 }
 
 func (nu notificationUsecase) SlackNotification() {
-	fmt.Println("Hello World")
+	contacts, err := nu.contactService.GetContactData()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-	nu.contactService.GetContactData()
+	fmt.Println(contacts)
 }

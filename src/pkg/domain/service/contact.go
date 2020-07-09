@@ -2,13 +2,13 @@ package service
 
 import (
 	"contact-bot/config"
+	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
-	"fmt"
 )
 
 // ContactService ContactServiceのためのinterface
 type ContactService interface {
-	GetContactData()
+	GetContactData() ([]model.Contact, error)
 }
 
 type contactService struct {
@@ -22,16 +22,16 @@ func NewContactService(cr repository.ContactRepository) ContactService {
 	}
 }
 
-func (cs contactService) GetContactData() {
+func (cs contactService) GetContactData() ([]model.Contact, error) {
 	conf, err := config.NewConfig()
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 
 	contacts, err := cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 
-	fmt.Println(contacts)
+	return contacts, nil
 }
