@@ -1,5 +1,7 @@
 package notification
 
+import "contact-bot/pkg/domain/model"
+
 type SlackNotificaion interface {
-	TestNotification() error
+	TestNotification(notifications []model.Notification) error
 }

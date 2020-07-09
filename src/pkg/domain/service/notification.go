@@ -23,7 +23,20 @@ func NewNotificationService(sn notification.SlackNotificaion) NotificationServic
 
 // ContactNotification Contactの情報を通知する
 func (ns notificationService) ContactNotification(contacts []model.Contact) error {
-	err := ns.slackNotificaion.TestNotification()
+	notifications := make([]model.Notification, 0, 3)
+	notifications = append(notifications, model.Notification{
+		Title: "Message",
+		Value: "Hello World!!!!",
+	})
+	notifications = append(notifications, model.Notification{
+		Title: "AnythingKey",
+		Value: "AnythingValue",
+	})
+	notifications = append(notifications, model.Notification{
+		Title: "Yahho",
+		Value: "Is it Perfect??",
+	})
 
+	err := ns.slackNotificaion.TestNotification(notifications)
 	return err
 }

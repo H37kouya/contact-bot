@@ -1,6 +1,7 @@
 package slack
 
 import (
+	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/notification"
 	"os"
 
@@ -21,12 +22,18 @@ func NewSendSlack() notification.SlackNotificaion {
 type sendSlack struct{}
 
 // TestNotification Test通知用
-func (ss sendSlack) TestNotification() error {
-	field1 := slack.Field{Title: "Message", Value: "Hello World!!!!"}
-	field2 := slack.Field{Title: "AnythingKey", Value: "AnythingValue"}
-
+func (ss sendSlack) TestNotification(notifications []model.Notification) error {
 	attachment := slack.Attachment{}
-	attachment.AddField(field1).AddField(field2)
+
+	for _, notification := range notifications {
+		slackField := slack.Field{
+			Title: notification.Title,
+			Value: notification.Value,
+			Short: notification.Short,
+		}
+		attachment.AddField(slackField)
+	}
+
 	color := "good"
 	attachment.Color = &color
 	payload := slack.Payload{
