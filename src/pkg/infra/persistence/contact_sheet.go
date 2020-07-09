@@ -19,8 +19,13 @@ func NewContactSheetPersistence() repository.ContactRepository {
 type contactSheetPersistence struct{}
 
 // GetContactSheetPersistence ContactSheetを取得する
-func (cp contactSheetPersistence) GetContactSheet(spreadsheetID, credentialFilePath string) (*sheets.Spreadsheet, error) {
-	client, err := httpClient(credentialFilePath)
+func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) (*sheets.Spreadsheet, error) {
+	jsonKey, err := getJSONKey()
+	if err != nil {
+		return nil, err
+	}
+
+	client, err := getHTTPClient(jsonKey)
 	if err != nil {
 		return nil, err
 	}
@@ -38,12 +43,14 @@ func (cp contactSheetPersistence) GetContactSheet(spreadsheetID, credentialFileP
 	return spreadsheet, nil
 }
 
-func httpClient(credentialFilePath string) (*http.Client, error) {
-	data, err := ioutil.ReadFile(credentialFilePath)
-	if err != nil {
-		return nil, err
-	}
-	conf, err := google.JWTConfigFromJSON(data, "https://www.googleapis.com/auth/spreadsheets")
+func getJSONKey() ([]byte, error) {
+	b, err := ioutil.ReadFile("credentials.json")
+	return b, err
+}
+
+// 認証情報からClient情報を取得
+func getHTTPClient(jsonKey []byte) (*http.Client, error) {
+	conf, err := google.JWTConfigFromJSON(jsonKey, "https://www.googleapis.com/auth/spreadsheets")
 	if err != nil {
 		return nil, err
 	}

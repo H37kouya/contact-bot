@@ -1,8 +1,12 @@
 package cli
 
-import "contact-bot/pkg/usecase"
+import (
+	"contact-bot/pkg/di"
+)
 
 // NotificationHandler 通知処理
 func NotificationHandler() {
-	usecase.NotificationUsecase()
+	nu := di.InjectNotificationUsecase()
+
+	nu.SlackNotification()
 }
