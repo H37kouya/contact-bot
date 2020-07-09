@@ -1,6 +1,7 @@
 package persistence
 
 import (
+	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
 	"context"
 	"encoding/json"
@@ -9,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -24,22 +26,25 @@ func NewContactSheetPersistence() repository.ContactRepository {
 type contactSheetPersistence struct{}
 
 // GetContactSheetPersistence ContactSheetを取得する
-func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) {
+func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) ([]model.Contact, error) {
 	b, err := ioutil.ReadFile("credentials.json")
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
+		return nil, err
 	}
 
 	// If modifying these scopes, delete your previously saved token.json.
 	config, err := google.ConfigFromJSON(b, "https://www.googleapis.com/auth/spreadsheets.readonly")
 	if err != nil {
 		log.Fatalf("Unable to parse client secret file to config: %v", err)
+		return nil, err
 	}
 	client := getClient(config)
 
 	srv, err := sheets.New(client)
 	if err != nil {
 		log.Fatalf("Unable to retrieve Sheets client: %v", err)
+		return nil, err
 	}
 
 	// Prints the names and majors of students in a sample spreadsheet:
@@ -48,17 +53,34 @@ func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) {
 	resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve data from sheet: %v", err)
+		return nil, err
 	}
 
 	if len(resp.Values) == 0 {
 		fmt.Println("No data found.")
-	} else {
-		fmt.Println("Name, Major:")
-		for _, row := range resp.Values {
-			// Print columns A and B, which correspond to indices 0 and 4.
-			fmt.Println(row)
-		}
+		return nil, nil
 	}
+
+	fmt.Println("Name, Major:")
+	contacts := convertToContacts(resp.Values)
+	return contacts, nil
+}
+
+func convertToContacts(rows [][]interface{}) []model.Contact {
+	contacts := make([]model.Contact, 0, len(rows))
+
+	for _, row := range rows {
+		id := row[0].(string)
+		intID, _ := strconv.Atoi(id)
+
+		contact := model.Contact{
+			ID:   intID,
+			Name: row[1].(string),
+		}
+		contacts = append(contacts, contact)
+	}
+
+	return contacts
 }
 
 // Retrieve a token, saves the token, then returns the generated client.

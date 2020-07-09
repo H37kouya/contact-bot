@@ -28,5 +28,10 @@ func (cs contactService) GetContactData() {
 		fmt.Println(err)
 	}
 
-	cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
+	contacts, err := cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(contacts)
 }
