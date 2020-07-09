@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"contact-bot/pkg/domain/service"
+	"contact-bot/pkg/infra/slack"
 	"fmt"
 )
 
@@ -29,4 +30,5 @@ func (nu notificationUsecase) SlackNotification() {
 	}
 
 	fmt.Println(contacts)
+	slack.TestNotification()
 }
