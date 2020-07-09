@@ -3,13 +3,12 @@ package service
 import (
 	"contact-bot/config"
 	"contact-bot/pkg/domain/repository"
-
-	"google.golang.org/api/sheets/v4"
+	"fmt"
 )
 
 // ContactService ContactServiceのためのinterface
 type ContactService interface {
-	GetContactData() (*sheets.Spreadsheet, error)
+	GetContactData()
 }
 
 type contactService struct {
@@ -23,16 +22,11 @@ func NewContactService(cr repository.ContactRepository) ContactService {
 	}
 }
 
-func (cs contactService) GetContactData() (*sheets.Spreadsheet, error) {
+func (cs contactService) GetContactData() {
 	conf, err := config.NewConfig()
 	if err != nil {
-		return nil, err
+		fmt.Println(err)
 	}
 
-	spreadSheet, err := cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
-	if err != nil {
-		return nil, err
-	}
-
-	return spreadSheet, nil
+	cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
 }
