@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"strconv"
+	"time"
 
 	"golang.org/x/oauth2/google"
 )
@@ -43,7 +43,7 @@ func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) ([]model
 
 	// Prints the names and majors of students in a sample spreadsheet:
 	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
-	readRange := "Class Data!A2:B"
+	readRange := "フォームの回答 1!A2:D"
 	resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve data from sheet: %v", err)
@@ -63,12 +63,14 @@ func convertToContacts(rows [][]interface{}) []model.Contact {
 	contacts := make([]model.Contact, 0, len(rows))
 
 	for _, row := range rows {
-		id := row[0].(string)
-		intID, _ := strconv.Atoi(id)
+		timestampStr := row[0].(string)
+		timestamp, _ := time.Parse("2020/07/10 17:16:17", timestampStr)
 
 		contact := model.Contact{
-			ID:    intID,
-			Title: row[1].(string),
+			TimeStamp: timestamp,
+			Title:     row[1].(string),
+			Second:    row[2].(string),
+			Third:     row[3].(string),
 		}
 		contacts = append(contacts, contact)
 	}
