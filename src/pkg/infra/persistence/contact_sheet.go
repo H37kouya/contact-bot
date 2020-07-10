@@ -1,13 +1,15 @@
 package persistence
 
 import (
+	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
+	"contact-bot/pkg/infra/sheet"
+	"fmt"
 	"io/ioutil"
-	"net/http"
+	"log"
+	"time"
 
-	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	"google.golang.org/api/sheets/v4"
 )
 
 // NewContactSheetPersistence ContactSheetPersistence
@@ -15,38 +17,63 @@ func NewContactSheetPersistence() repository.ContactRepository {
 	return &contactSheetPersistence{}
 }
 
-// contactSheetPersistence Image データの構造体
+// contactSheetPersistence contactSheetPersistence データの構造体
 type contactSheetPersistence struct{}
 
 // GetContactSheetPersistence ContactSheetを取得する
-func (cp contactSheetPersistence) GetContactSheet(spreadsheetID, credentialFilePath string) (*sheets.Spreadsheet, error) {
-	client, err := httpClient(credentialFilePath)
+func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) ([]model.Contact, error) {
+	b, err := ioutil.ReadFile("credentials.json")
 	if err != nil {
+		log.Fatalf("Unable to read client secret file: %v", err)
 		return nil, err
 	}
 
-	sheetService, err := sheets.New(client)
+	// If modifying these scopes, delete your previously saved token.json.
+	config, err := google.ConfigFromJSON(b, "https://www.googleapis.com/auth/spreadsheets.readonly")
 	if err != nil {
+		log.Fatalf("Unable to parse client secret file to config: %v", err)
 		return nil, err
 	}
 
-	spreadsheet, err := sheetService.Spreadsheets.Get(spreadsheetID).Do()
+	srv, err := sheet.NewSheet(config)
 	if err != nil {
+		log.Fatalf("Unable to retrieve Sheets client: %v", err)
 		return nil, err
 	}
 
-	return spreadsheet, nil
+	// Prints the names and majors of students in a sample spreadsheet:
+	// https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
+	readRange := "フォームの回答 1!A2:D"
+	resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
+	if err != nil {
+		log.Fatalf("Unable to retrieve data from sheet: %v", err)
+		return nil, err
+	}
+
+	if len(resp.Values) == 0 {
+		fmt.Println("No data found.")
+		return nil, nil
+	}
+
+	contacts := convertToContacts(resp.Values)
+	return contacts, nil
 }
 
-func httpClient(credentialFilePath string) (*http.Client, error) {
-	data, err := ioutil.ReadFile(credentialFilePath)
-	if err != nil {
-		return nil, err
-	}
-	conf, err := google.JWTConfigFromJSON(data, "https://www.googleapis.com/auth/spreadsheets")
-	if err != nil {
-		return nil, err
+func convertToContacts(rows [][]interface{}) []model.Contact {
+	contacts := make([]model.Contact, 0, len(rows))
+
+	for _, row := range rows {
+		timestampStr := row[0].(string)
+		timestamp, _ := time.Parse("2020/07/10 17:16:17", timestampStr)
+
+		contact := model.Contact{
+			TimeStamp: timestamp,
+			Title:     row[1].(string),
+			Second:    row[2].(string),
+			Third:     row[3].(string),
+		}
+		contacts = append(contacts, contact)
 	}
 
-	return conf.Client(oauth2.NoContext), nil
+	return contacts
 }

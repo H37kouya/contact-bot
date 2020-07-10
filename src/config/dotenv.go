@@ -1,9 +1,7 @@
 package config
 
 import (
-	"fmt"
 	"log"
-	"os"
 
 	"github.com/joho/godotenv"
 )
@@ -14,7 +12,7 @@ func init() {
 
 // loadDotEnv .envファイルをロードする
 func loadDotEnv() {
-	if godotenv.Load(fmt.Sprintf("../%s.env", os.Getenv("GO_ENV"))) != nil {
+	if godotenv.Load(".env") != nil {
 		log.Fatal("Error loading .env file")
 	}
 }

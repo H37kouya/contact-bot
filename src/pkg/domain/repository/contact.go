@@ -1,8 +1,10 @@
 package repository
 
-import "google.golang.org/api/sheets/v4"
+import (
+	"contact-bot/pkg/domain/model"
+)
 
 // ContactRepository Contactリポジトリ
 type ContactRepository interface {
-	GetContactSheet(spreadsheetID, credentialFilePath string) (*sheets.Spreadsheet, error)
+	GetContactSheet(spreadsheetID string) ([]model.Contact, error)
 }
