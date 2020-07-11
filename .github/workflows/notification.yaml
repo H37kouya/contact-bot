@@ -3,13 +3,11 @@ name: Go
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
 
 jobs:
 
   build:
-    name: Build
+    name: Run 
     runs-on: ubuntu-latest
     steps:
     - name: Check out code into the Go module directory
@@ -26,7 +24,7 @@ jobs:
             dep ensure
         fi
 
-    - name: Test
+    - name: Run 
       run: docker-compose run cli go run ./cmd/main.go
       env:
         SHEET_ACCESS_TOKEN: ${{ secrets.SHEET_ACCESS_TOKEN }}
