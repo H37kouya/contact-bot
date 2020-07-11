@@ -27,4 +27,10 @@ jobs:
         fi
 
     - name: Test
-      run: docker-compose run cli go test -v ./...
+      run: docker-compose run cli go run ./cmd/main.go
+      env:
+        SHEET_ACCESS_TOKEN: ${{ secrets.SHEET_ACCESS_TOKEN }}
+        SHEET_EXPIRY: ${{ secrets.SHEET_EXPIRY }}
+        SHEET_TOKEN_TYPE: ${{ secrets.SHEET_TOKEN_TYPE }}
+        SHEET_REFRESH_TOKEN: ${{ secrets.SHEET_REFRESH_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
