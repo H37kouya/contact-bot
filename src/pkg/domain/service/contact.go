@@ -4,6 +4,8 @@ import (
 	"contact-bot/config"
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
+	"contact-bot/pkg/helper"
+	"time"
 )
 
 // ContactService ContactServiceのためのinterface
@@ -33,5 +35,9 @@ func (cs contactService) GetContactData() ([]model.Contact, error) {
 		return nil, err
 	}
 
-	return contacts, nil
+	now := helper.GetHourTime(helper.GetNowTokyoTime())
+	diff := 1
+	filterContacts := model.FilterContactByTimeStamp(contacts, now.Add(time.Duration(-1*diff)*time.Hour), now)
+
+	return filterContacts, nil
 }
