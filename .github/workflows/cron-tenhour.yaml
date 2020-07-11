@@ -35,4 +35,4 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         SHEET_CREDENTIAL: ${{ secrets.SHEET_CREDENTIAL }}
         SPREAD_SHEET_ID: ${{ secrets.SPREAD_SHEET_ID }}
-        POLLING_DIFF: 1
+        POLLING_DIFF: 10
