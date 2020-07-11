@@ -3,6 +3,7 @@
 ## 環境構築と実行
 
 ``` shell
+# Build
 $docker-compose build
 
 $docker-compose up -d
