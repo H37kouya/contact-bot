@@ -15,10 +15,10 @@ type Config struct {
 }
 
 // NewConfig return configuration struct.
-func NewConfig() (Config, error) {
+func NewConfig() Config {
 	var config Config
 
 	config.SpreadSheet.ID = os.Getenv("SPREAD_SHEET_ID")
 
-	return config, nil
+	return config
 }

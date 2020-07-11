@@ -30,9 +30,15 @@ func (nu notificationUsecase) SlackNotification() {
 		return
 	}
 
-	fmt.Println(contacts)
-	err = nu.notificationService.ContactNotification(contacts)
-	if err != nil {
-		fmt.Println(err)
+	if len(contacts) > 0 {
+		if err = nu.notificationService.ContactNotification(contacts); err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		fmt.Println("Slackに通知しました！")
+		return
 	}
+
+	fmt.Println("最新の通知は0件でした")
 }

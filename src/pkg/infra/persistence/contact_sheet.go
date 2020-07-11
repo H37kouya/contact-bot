@@ -3,11 +3,11 @@ package persistence
 import (
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
+	"contact-bot/pkg/helper"
 	"contact-bot/pkg/infra/sheet"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"time"
 
 	"golang.org/x/oauth2/google"
 )
@@ -63,8 +63,7 @@ func convertToContacts(rows [][]interface{}) []model.Contact {
 	contacts := make([]model.Contact, 0, len(rows))
 
 	for _, row := range rows {
-		timestampStr := row[0].(string)
-		timestamp, _ := time.Parse("2020/07/10 17:16:17", timestampStr)
+		timestamp := helper.SheetTimeStampStrToTime(row[0].(string))
 
 		contact := model.Contact{
 			TimeStamp: timestamp,

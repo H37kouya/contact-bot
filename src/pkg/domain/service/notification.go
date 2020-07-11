@@ -3,6 +3,7 @@ package service
 import (
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/notification"
+	"fmt"
 )
 
 // NotificationService NotificationService for Interface
@@ -23,7 +24,9 @@ func NewNotificationService(sn notification.SlackNotificaion) NotificationServic
 
 // ContactNotification Contactの情報を通知する
 func (ns notificationService) ContactNotification(contacts []model.Contact) error {
-	notifications := model.ContactToNotification("最初のタイトル", "最初のメッセージ", contacts)
+	title := "お問い合わせがあります"
+	meg := fmt.Sprintf("%d件あります。", len(contacts))
+	notifications := model.ContactToNotification(title, meg, contacts)
 
 	err := ns.slackNotification.TestNotification(notifications)
 	return err
