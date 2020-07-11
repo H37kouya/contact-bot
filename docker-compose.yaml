@@ -8,3 +8,11 @@ services:
     tty: true
     volumes:
       - ./src:/contact_bot_src
+    environment:
+      - CI
+      - SHEET_ACCESS_TOKEN
+      - SHEET_EXPIRY
+      - SHEET_TOKEN_TYPE
+      - SHEET_REFRESH_TOKEN
+      - SLACK_WEBHOOK_URL
+      - SHEET_CREDENTIAL
