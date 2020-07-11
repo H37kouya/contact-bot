@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"golang.org/x/oauth2/google"
 )
@@ -22,7 +23,7 @@ type contactSheetPersistence struct{}
 
 // GetContactSheetPersistence ContactSheetを取得する
 func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) ([]model.Contact, error) {
-	b, err := ioutil.ReadFile("credentials.json")
+	b, err := getCredentials()
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
 		return nil, err
@@ -75,4 +76,15 @@ func convertToContacts(rows [][]interface{}) []model.Contact {
 	}
 
 	return contacts
+}
+
+func getCredentials() ([]byte, error) {
+	c := os.Getenv("SHEET_CREDENTIAL")
+
+	if c != "" {
+		b := []byte(c)
+		return b, nil
+	}
+
+	return ioutil.ReadFile("credentials.json")
 }

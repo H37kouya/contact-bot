@@ -13,7 +13,7 @@ func init() {
 
 // loadDotEnv .envファイルをロードする
 func loadDotEnv() {
-	if os.Getenv("CI") == true {
+	if os.Getenv("CI") == "true" {
 		return
 	}
 

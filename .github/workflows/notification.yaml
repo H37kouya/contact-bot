@@ -33,3 +33,4 @@ jobs:
         SHEET_TOKEN_TYPE: ${{ secrets.SHEET_TOKEN_TYPE }}
         SHEET_REFRESH_TOKEN: ${{ secrets.SHEET_REFRESH_TOKEN }}
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SHEET_CREDENTIAL: ${{ secrets.SHEET_CREDENTIAL }}
