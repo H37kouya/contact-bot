@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  build:
+  cron-one:
     name: Run One Hour Scedule
     runs-on: ubuntu-latest
     steps:
