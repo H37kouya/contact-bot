@@ -17,3 +17,4 @@ services:
       - SLACK_WEBHOOK_URL
       - SHEET_CREDENTIAL
       - SPREAD_SHEET_ID
+      - POLLING_DIFF

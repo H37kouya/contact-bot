@@ -5,7 +5,13 @@ import (
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
 	"contact-bot/pkg/helper"
+	"os"
+	"strconv"
 	"time"
+)
+
+const (
+	defaultDiff int = 1
 )
 
 // ContactService ContactServiceのためのinterface
@@ -33,8 +39,22 @@ func (cs contactService) GetContactData() ([]model.Contact, error) {
 	}
 
 	now := helper.GetHourTime(helper.GetNowTokyoTime())
-	diff := 1
-	filterContacts := model.FilterContactByTimeStamp(contacts, now.Add(time.Duration(-1*diff)*time.Hour), now)
+	diff := getPollingDiff()
+	filterContacts := model.FilterContactByTimeStamp(contacts, getBeforeTime(diff, now), now)
 
 	return filterContacts, nil
+}
+
+func getBeforeTime(diff int, t time.Time) time.Time {
+	return t.Add(time.Duration(-1*diff) * time.Hour)
+}
+
+func getPollingDiff() int {
+	str := os.Getenv("POLLING_DIFF")
+	if str == "" {
+		return defaultDiff
+	}
+
+	diff, _ := strconv.Atoi(str)
+	return diff
 }
