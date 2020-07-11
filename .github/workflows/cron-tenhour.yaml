@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  cron-one:
+  cron-ten:
     name: Run Ten Hour Scedule
     runs-on: ubuntu-latest
     steps:
