@@ -25,10 +25,7 @@ func NewContactService(cr repository.ContactRepository) ContactService {
 }
 
 func (cs contactService) GetContactData() ([]model.Contact, error) {
-	conf, err := config.NewConfig()
-	if err != nil {
-		return nil, err
-	}
+	conf := config.NewConfig()
 
 	contacts, err := cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
 	if err != nil {

@@ -9,11 +9,7 @@ import (
 
 func TestNewConfig(t *testing.T) {
 	t.Run("環境変数を取得できる", func(t *testing.T) {
-		config, err := config.NewConfig()
-
-		if err != nil {
-			t.Fatal(err)
-		}
+		config := config.NewConfig()
 
 		assert.NotNil(t, config.SpreadSheet.ID)
 	})
