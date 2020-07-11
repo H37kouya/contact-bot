@@ -5,12 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/oauth2"
-	"google.golang.org/api/sheets/v4"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"golang.org/x/oauth2"
+	"google.golang.org/api/sheets/v4"
 )
 
 func NewSheet(config *oauth2.Config) (*sheets.Service, error) {
@@ -72,8 +73,9 @@ func tokenFromEnv() (*oauth2.Token, error) {
 		return nil, errors.New("環境変数がセットされていません")
 	}
 
-	expiry, err := time.Parse("2020-07-09T12:05:55.4409776Z", expiryStr)
+	expiry, err := time.Parse("2006-01-02T15:04:05.999999999Z", expiryStr)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
 
