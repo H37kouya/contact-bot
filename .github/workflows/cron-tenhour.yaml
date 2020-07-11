@@ -1,0 +1,38 @@
+name: Go
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+
+  build:
+    name: Run Ten Hour Scedule
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+
+    - name: docker
+      run: docker-compose build
+
+    - name: Get dependencies
+      run: |
+        docker-compose run cli go get -v -t -d ./...
+        if [ -f Gopkg.toml ]; then
+            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+            dep ensure
+        fi
+
+    - name: Run
+      run: docker-compose run cli go run ./cmd/main.go
+      env:
+        CI: true
+        SHEET_ACCESS_TOKEN: ${{ secrets.SHEET_ACCESS_TOKEN }}
+        SHEET_EXPIRY: ${{ secrets.SHEET_EXPIRY }}
+        SHEET_TOKEN_TYPE: ${{ secrets.SHEET_TOKEN_TYPE }}
+        SHEET_REFRESH_TOKEN: ${{ secrets.SHEET_REFRESH_TOKEN }}
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SHEET_CREDENTIAL: ${{ secrets.SHEET_CREDENTIAL }}
+        SPREAD_SHEET_ID: ${{ secrets.SPREAD_SHEET_ID }}
+        POLLING_DIFF: 1
