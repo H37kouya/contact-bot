@@ -38,7 +38,7 @@ func (ss sendSlack) TestNotification(notifications []model.Notification) error {
 	attachment.Color = &color
 	payload := slack.Payload{
 		Username:    USERNAME,
-		Channel:     CHANNEL,
+		Channel:     getChannelOrDefault(),
 		Attachments: []slack.Attachment{attachment},
 	}
 	err := slack.Send(os.Getenv("SLACK_WEBHOOK_URL"), "", payload)
@@ -47,4 +47,12 @@ func (ss sendSlack) TestNotification(notifications []model.Notification) error {
 		return nil
 	}
 	return err[0]
+}
+
+func getChannelOrDefault() string {
+	if str := os.Getenv("SLACK_CHANNEL_NAME"); str != "" {
+		return str
+	}
+
+	return CHANNEL
 }

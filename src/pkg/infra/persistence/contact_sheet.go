@@ -66,13 +66,23 @@ func convertToContacts(rows [][]interface{}) []model.Contact {
 	for _, row := range rows {
 		timestamp := helper.SheetTimeStampStrToTime(row[0].(string))
 
-		contact := model.Contact{
-			TimeStamp: timestamp,
-			Title:     interfaceToStr(row[1]),
-			Second:    interfaceToStr(row[2]),
-			Third:     interfaceToStr(row[3]),
+		if len(row) == 3 {
+			contact := model.Contact{
+				TimeStamp: timestamp,
+				Title:     interfaceToStr(row[1]),
+				Second:    interfaceToStr(row[2]),
+				Third:     "",
+			}
+			contacts = append(contacts, contact)
+		} else if len(row) == 4 {
+			contact := model.Contact{
+				TimeStamp: timestamp,
+				Title:     interfaceToStr(row[1]),
+				Second:    interfaceToStr(row[2]),
+				Third:     interfaceToStr(row[3]),
+			}
+			contacts = append(contacts, contact)
 		}
-		contacts = append(contacts, contact)
 	}
 
 	return contacts
