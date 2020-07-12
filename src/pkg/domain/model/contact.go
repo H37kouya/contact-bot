@@ -14,7 +14,7 @@ type Contact struct {
 
 // ToNotificationMessage Notification用のMessageの取得
 func (contact Contact) ToNotificationMessage() string {
-	meg := contact.Second + contact.Third
+	meg := contact.Second + "\n" + contact.Third
 	return meg
 }
 
