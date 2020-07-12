@@ -7,7 +7,7 @@ import (
 
 // NotificationUsecase NotificationUsecaseのためのinterface
 type NotificationUsecase interface {
-	SlackNotification()
+	SlackNotification(pollingDiff int)
 }
 
 type notificationUsecase struct {
@@ -23,8 +23,9 @@ func NewNotificationUsecase(cs service.ContactService, ns service.NotificationSe
 	}
 }
 
-func (nu notificationUsecase) SlackNotification() {
-	contacts, err := nu.contactService.GetContactData()
+// SlackNotification Slackへ通知する
+func (nu notificationUsecase) SlackNotification(pollingDiff int) {
+	contacts, err := nu.contactService.GetContactData(pollingDiff)
 	if err != nil {
 		fmt.Println(err)
 		return

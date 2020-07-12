@@ -5,8 +5,6 @@ import (
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
 	"contact-bot/pkg/helper"
-	"os"
-	"strconv"
 	"time"
 )
 
@@ -16,7 +14,7 @@ const (
 
 // ContactService ContactServiceのためのinterface
 type ContactService interface {
-	GetContactData() ([]model.Contact, error)
+	GetContactData(pollingDiff int) ([]model.Contact, error)
 }
 
 type contactService struct {
@@ -30,7 +28,8 @@ func NewContactService(cr repository.ContactRepository) ContactService {
 	}
 }
 
-func (cs contactService) GetContactData() ([]model.Contact, error) {
+// GetContactData Contactのデータを取得する
+func (cs contactService) GetContactData(pollingDiff int) ([]model.Contact, error) {
 	conf := config.NewConfig()
 
 	contacts, err := cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
@@ -38,23 +37,14 @@ func (cs contactService) GetContactData() ([]model.Contact, error) {
 		return nil, err
 	}
 
+	// 現在時刻の取得
 	now := helper.GetHourTime(helper.GetNowTokyoTime())
-	diff := getPollingDiff()
-	filterContacts := model.FilterContactByTimeStamp(contacts, getBeforeTime(diff, now), now)
+	// 時間によってフィルターする
+	filterContacts := model.FilterContactByTimeStamp(contacts, getBeforeTime(pollingDiff, now), now)
 
 	return filterContacts, nil
 }
 
 func getBeforeTime(diff int, t time.Time) time.Time {
 	return t.Add(time.Duration(-1*diff) * time.Hour)
-}
-
-func getPollingDiff() int {
-	str := os.Getenv("POLLING_DIFF")
-	if str == "" {
-		return defaultDiff
-	}
-
-	diff, _ := strconv.Atoi(str)
-	return diff
 }
