@@ -10,6 +10,11 @@ const (
 	timeLayout string = "2006/01/02 15:04:05"
 )
 
+// GetBeforeHourTime {hour}時間前を取得
+func GetBeforeHourTime(hour int, t time.Time) time.Time {
+	return t.Add(time.Duration(-1*hour) * time.Hour)
+}
+
 // GetNowTokyoTime Tokyoの時間を取得
 func GetNowTokyoTime() time.Time {
 	now := time.Now()

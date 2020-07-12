@@ -5,7 +5,6 @@ import (
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
 	"contact-bot/pkg/helper"
-	"time"
 )
 
 const (
@@ -37,14 +36,12 @@ func (cs contactService) GetContactData(pollingDiff int) ([]model.Contact, error
 		return nil, err
 	}
 
-	// 現在時刻の取得
-	now := helper.GetHourTime(helper.GetNowTokyoTime())
+	// 情報取得の終了時刻 現在時刻を時間で切り捨てたもの()
+	endTime := helper.GetHourTime(helper.GetNowTokyoTime())
+	// 情報取得の開始時刻
+	startTime := helper.GetBeforeHourTime(pollingDiff, endTime)
 	// 時間によってフィルターする
-	filterContacts := model.FilterContactByTimeStamp(contacts, getBeforeTime(pollingDiff, now), now)
+	filterContacts := model.FilterContactByTimeStamp(contacts, startTime, endTime)
 
 	return filterContacts, nil
-}
-
-func getBeforeTime(diff int, t time.Time) time.Time {
-	return t.Add(time.Duration(-1*diff) * time.Hour)
 }

@@ -7,7 +7,7 @@ services:
       dockerfile: ./src/Dockerfile
     tty: true
     volumes:
-      - ./src:/contact_bot_src
+      - ./src:/go/src/contact-bot
     environment:
       - CI
       - SHEET_ACCESS_TOKEN
