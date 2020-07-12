@@ -5,8 +5,8 @@ import (
 )
 
 // NotificationHandler 通知処理
-func NotificationHandler() {
+func NotificationHandler(pollingDiff int) {
 	nu := di.InjectNotificationUsecase()
 
-	nu.SlackNotification()
+	nu.SlackNotification(pollingDiff)
 }
