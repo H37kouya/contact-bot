@@ -68,9 +68,9 @@ func convertToContacts(rows [][]interface{}) []model.Contact {
 
 		contact := model.Contact{
 			TimeStamp: timestamp,
-			Title:     row[1].(string),
-			Second:    row[2].(string),
-			Third:     row[3].(string),
+			Title:     interfaceToStr(row[1]),
+			Second:    interfaceToStr(row[2]),
+			Third:     interfaceToStr(row[3]),
 		}
 		contacts = append(contacts, contact)
 	}
@@ -87,4 +87,13 @@ func getCredentials() ([]byte, error) {
 	}
 
 	return ioutil.ReadFile("credentials.json")
+}
+
+func interfaceToStr(i interface{}) string {
+	switch v := i.(type) {
+	case string:
+		return v
+	default:
+		return ""
+	}
 }
