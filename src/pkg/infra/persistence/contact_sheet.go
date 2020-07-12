@@ -10,6 +10,7 @@ import (
 	"log"
 	"os"
 
+	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )
 
@@ -23,16 +24,8 @@ type contactSheetPersistence struct{}
 
 // GetContactSheetPersistence ContactSheetを取得する
 func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) ([]model.Contact, error) {
-	b, err := getCredentials()
+	config, err := getGoogleConfig()
 	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
-		return nil, err
-	}
-
-	// If modifying these scopes, delete your previously saved token.json.
-	config, err := google.ConfigFromJSON(b, "https://www.googleapis.com/auth/spreadsheets.readonly")
-	if err != nil {
-		log.Fatalf("Unable to parse client secret file to config: %v", err)
 		return nil, err
 	}
 
@@ -86,6 +79,21 @@ func convertToContacts(rows [][]interface{}) []model.Contact {
 	}
 
 	return contacts
+}
+
+func getGoogleConfig() (*oauth2.Config, error) {
+	b, err := getCredentials()
+	if err != nil {
+		return nil, fmt.Errorf("Unable to read client secret file: %v", err)
+	}
+
+	// If modifying these scopes, delete your previously saved token.json.
+	config, err := google.ConfigFromJSON(b, "https://www.googleapis.com/auth/spreadsheets.readonly")
+	if err != nil {
+		return nil, fmt.Errorf("Unable to parse client secret file to config: %v", err)
+	}
+
+	return config, nil
 }
 
 func getCredentials() ([]byte, error) {
