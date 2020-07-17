@@ -40,8 +40,7 @@ func (cp contactSheetPersistence) GetContactSheet(spreadsheetID string) ([]model
 	readRange := "フォームの回答 1!A2:D"
 	resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
 	if err != nil {
-		log.Fatalf("Unable to retrieve data from sheet: %v", err)
-		return nil, err
+		return nil, fmt.Errorf("Unable to retrieve data from sheet: %v", err)
 	}
 
 	if len(resp.Values) == 0 {

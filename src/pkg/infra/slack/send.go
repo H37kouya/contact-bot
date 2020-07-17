@@ -1,16 +1,11 @@
 package slack
 
 import (
+	"contact-bot/config"
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/notification"
-	"os"
 
 	"github.com/ashwanthkumar/slack-go-webhook"
-)
-
-const (
-	CHANNEL  = "botmake"
-	USERNAME = "GoBot"
 )
 
 // NewSendSlack SendSlack
@@ -24,6 +19,7 @@ type sendSlack struct{}
 // TestNotification Test通知用
 func (ss sendSlack) TestNotification(notifications []model.Notification) error {
 	attachment := slack.Attachment{}
+	conf := config.Conf.ContactSlack
 
 	for _, notification := range notifications {
 		slackField := slack.Field{
@@ -37,22 +33,14 @@ func (ss sendSlack) TestNotification(notifications []model.Notification) error {
 	color := "good"
 	attachment.Color = &color
 	payload := slack.Payload{
-		Username:    USERNAME,
-		Channel:     getChannelOrDefault(),
+		Username:    conf.Username,
+		Channel:     conf.ChannelName,
 		Attachments: []slack.Attachment{attachment},
 	}
-	err := slack.Send(os.Getenv("SLACK_WEBHOOK_URL"), "", payload)
 
-	if len(err) == 0 {
-		return nil
-	}
-	return err[0]
-}
-
-func getChannelOrDefault() string {
-	if str := os.Getenv("SLACK_CHANNEL_NAME"); str != "" {
-		return str
+	if err := slack.Send(conf.WebhookURL, "", payload); len(err) >= 0 {
+		return err[0]
 	}
 
-	return CHANNEL
+	return nil
 }

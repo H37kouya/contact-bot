@@ -29,9 +29,9 @@ func NewContactService(cr repository.ContactRepository) ContactService {
 
 // GetContactData Contactのデータを取得する
 func (cs contactService) GetContactData(pollingDiff int) ([]model.Contact, error) {
-	conf := config.NewConfig()
+	spreadSheetConf := config.Conf.SpreadSheet
 
-	contacts, err := cs.contactRepository.GetContactSheet(conf.SpreadSheet.ID)
+	contacts, err := cs.contactRepository.GetContactSheet(spreadSheetConf.ID)
 	if err != nil {
 		return nil, err
 	}
