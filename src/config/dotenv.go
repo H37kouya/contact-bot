@@ -17,7 +17,8 @@ func loadDotEnv() {
 		return
 	}
 
-	if godotenv.Load(".env") != nil {
-		log.Fatal("Error loading .env file")
+	if err := godotenv.Load(".env"); err != nil {
+		log.Println(err)
+		log.Println("Error loading .env file")
 	}
 }
