@@ -71,7 +71,7 @@ func tokenFromEnv() (*oauth2.Token, error) {
 	refreshToken := conf.RefreshToken
 	expiry := conf.Expiry
 
-	if accessToken == "" || tokenType == "" || refreshToken == "" || expiry.IsZero {
+	if accessToken == "" || tokenType == "" || refreshToken == "" || expiry.IsZero() {
 		return nil, errors.New("環境変数がセットされていません")
 	}
 
