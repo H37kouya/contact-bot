@@ -1,6 +1,7 @@
 package sheet
 
 import (
+	"contact-bot/config"
 	"context"
 	"encoding/json"
 	"errors"
@@ -8,7 +9,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 
 	"golang.org/x/oauth2"
 	"google.golang.org/api/sheets/v4"
@@ -64,19 +64,15 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 }
 
 func tokenFromEnv() (*oauth2.Token, error) {
-	accessToken := os.Getenv("SHEET_ACCESS_TOKEN")
-	tokenType := os.Getenv("SHEET_TOKEN_TYPE")
-	refreshToken := os.Getenv("SHEET_REFRESH_TOKEN")
-	expiryStr := os.Getenv("SHEET_EXPIRY")
+	conf := config.Conf.SpreadSheet
 
-	if accessToken == "" || tokenType == "" || refreshToken == "" || expiryStr == "" {
+	accessToken := conf.AccessToken
+	tokenType := conf.TokenType
+	refreshToken := conf.RefreshToken
+	expiry := conf.Expiry
+
+	if accessToken == "" || tokenType == "" || refreshToken == "" || expiry.IsZero {
 		return nil, errors.New("環境変数がセットされていません")
-	}
-
-	expiry, err := time.Parse("2006-01-02T15:04:05.999999999Z", expiryStr)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
 	}
 
 	tok := &oauth2.Token{
