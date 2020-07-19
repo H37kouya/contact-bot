@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"time"
 )
 
 const (
@@ -16,7 +17,12 @@ var Conf *Config
 
 // SpreadSheetConfig SpreedSheetの設定
 type SpreadSheetConfig struct {
-	ID string
+	ID           string
+	AccessToken  string
+	TokenType    string
+	RefreshToken string
+	Expiry       time.Time
+	Credential   []byte
 }
 
 // SlackConfig Slackの設定1
@@ -46,6 +52,18 @@ func NewConfig() *Config {
 
 func (conf *Config) setSpreadSheetConf() {
 	conf.SpreadSheet.ID = os.Getenv("SPREAD_SHEET_ID")
+
+	conf.SpreadSheet.AccessToken = os.Getenv("SHEET_ACCESS_TOKEN")
+	conf.SpreadSheet.TokenType = os.Getenv("SHEET_TOKEN_TYPE")
+	conf.SpreadSheet.RefreshToken = os.Getenv("SHEET_REFRESH_TOKEN")
+
+	if expiry, err := time.Parse("2006-01-02T15:04:05.999999999Z", os.Getenv("SHEET_EXPIRY")); err != nil {
+		conf.SpreadSheet.Expiry = expiry
+	}
+
+	if c := os.Getenv("SHEET_CREDENTIAL"); c != "" {
+		conf.SpreadSheet.Credential = []byte(c)
+	}
 }
 
 func (conf *Config) setSlack() {
