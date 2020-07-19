@@ -98,7 +98,7 @@ func getGoogleConfig() (*oauth2.Config, error) {
 func getCredentials() ([]byte, error) {
 	conf := config.Conf.SpreadSheet
 
-	if b := conf.Credential; b != [0]byte {
+	if b := conf.Credential; b != nil {
 		return conf.Credential, nil
 	}
 
