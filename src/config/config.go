@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"os"
 	"time"
 )
@@ -85,6 +86,7 @@ func (conf *Config) setSlack() {
 }
 
 func ExpiryStrToTime(str string) time.Time {
-	expiry, _ := time.Parse("2006-01-02T15:04:05.999999999Z", str)
+	expiry, err := time.Parse("2006-01-02T15:04:05.999999999Z", str)
+	fmt.Println(err)
 	return expiry
 }

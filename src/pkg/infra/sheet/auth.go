@@ -34,6 +34,7 @@ func getClient(config *oauth2.Config) *http.Client {
 	if err == nil {
 		return config.Client(context.Background(), tok)
 	}
+	fmt.Println(err)
 
 	tokFile := "token.json"
 	tok, err = tokenFromFile(tokFile)
