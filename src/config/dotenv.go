@@ -7,10 +7,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func init() {
-	loadDotEnv()
-}
-
 // loadDotEnv .envファイルをロードする
 func loadDotEnv() {
 	if os.Getenv("CI") == "true" {
