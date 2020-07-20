@@ -63,6 +63,8 @@ func (conf *Config) setSpreadSheetConf() {
 
 	if c := os.Getenv("SHEET_CREDENTIAL"); c != "" {
 		conf.SpreadSheet.Credential = []byte(c)
+	} else {
+		conf.SpreadSheet.Credential = nil
 	}
 }
 
