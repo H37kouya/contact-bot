@@ -99,7 +99,6 @@ func getCredentials() ([]byte, error) {
 	conf := config.Conf.SpreadSheet
 
 	if b := conf.Credential; b != nil {
-		fmt.Println(b)
 		return b, nil
 	}
 
