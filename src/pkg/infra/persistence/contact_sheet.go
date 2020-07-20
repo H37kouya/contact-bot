@@ -1,7 +1,6 @@
 package persistence
 
 import (
-	"contact-bot/config"
 	"contact-bot/pkg/domain/model"
 	"contact-bot/pkg/domain/repository"
 	"contact-bot/pkg/helper"
@@ -9,6 +8,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -96,10 +96,11 @@ func getGoogleConfig() (*oauth2.Config, error) {
 }
 
 func getCredentials() ([]byte, error) {
-	conf := config.Conf.SpreadSheet
+	c := os.Getenv("SHEET_CREDENTIAL")
 
-	if b := conf.Credential; b != nil {
-		return conf.Credential, nil
+	if c != "" {
+		b := []byte(c)
+		return b, nil
 	}
 
 	return ioutil.ReadFile("credentials.json")
