@@ -28,7 +28,6 @@ func (nu notificationUsecase) SlackNotification(pollingDiff int) {
 	contacts, err := nu.contactService.GetContactData(pollingDiff)
 	if err != nil {
 		fmt.Println(err)
-		nu.notificationService.ErrorNotification(err)
 		return
 	}
 

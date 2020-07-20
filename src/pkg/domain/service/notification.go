@@ -9,7 +9,6 @@ import (
 // NotificationService NotificationService for Interface
 type NotificationService interface {
 	ContactNotification(contacts []model.Contact) error
-	ErrorNotification(err error) error
 }
 
 type notificationService struct {
@@ -31,9 +30,4 @@ func (ns notificationService) ContactNotification(contacts []model.Contact) erro
 
 	err := ns.slackNotification.TestNotification(notifications)
 	return err
-}
-
-// ErrorNotification Errorを通知する
-func (ns notificationService) ErrorNotification(err error) error {
-	return ns.slackNotification.ErrorNotification(err)
 }
