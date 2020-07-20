@@ -44,3 +44,29 @@ func (ss sendSlack) TestNotification(notifications []model.Notification) error {
 
 	return nil
 }
+
+func (ss sendSlack) ErrorNotification(err error) error {
+	attachment := slack.Attachment{}
+	conf := config.Conf.ContactSlack
+
+	slackField := slack.Field{
+		Title: "Errorが発生しています",
+		Value: err.Error(),
+		Short: false,
+	}
+	attachment.AddField(slackField)
+
+	color := "danger"
+	attachment.Color = &color
+	payload := slack.Payload{
+		Username:    conf.Username,
+		Channel:     conf.ChannelName,
+		Attachments: []slack.Attachment{attachment},
+	}
+
+	if err := slack.Send(conf.WebhookURL, "", payload); len(err) >= 0 {
+		return err[0]
+	}
+
+	return nil
+}
