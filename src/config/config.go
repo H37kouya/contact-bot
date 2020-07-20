@@ -59,7 +59,8 @@ func (conf *Config) setSpreadSheetConf() {
 	conf.SpreadSheet.AccessToken = os.Getenv("SHEET_ACCESS_TOKEN")
 	conf.SpreadSheet.TokenType = os.Getenv("SHEET_TOKEN_TYPE")
 	conf.SpreadSheet.RefreshToken = os.Getenv("SHEET_REFRESH_TOKEN")
-	conf.SpreadSheet.Expiry = ExpiryStrToTime(os.Getenv("SHEET_EXPIRY"))
+	conf.SpreadSheet.Expiry = ExpiryStrToTime("2020-07-20T03:18:33.871866Z")
+	// conf.SpreadSheet.Expiry = ExpiryStrToTime(os.Getenv("SHEET_EXPIRY"))
 
 	if c := os.Getenv("SHEET_CREDENTIAL"); c != "" {
 		conf.SpreadSheet.Credential = []byte(c)
